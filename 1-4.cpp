@@ -13,7 +13,7 @@ bool is_palindrome_permutation(string& s) {
   int letters[256] = {0};
   for (char c : s) {
     if (c != ' ')
-      letters[static_cast<int>(c)]++;
+      letters[static_cast<int>(tolower(c))]++;
     else
       len--;
   }
@@ -38,7 +38,7 @@ bool is_palindrome_textbook(string& s) {
   int letters[256] = {0};
   for (char c : s) {
     if (c != ' ') {
-      int char_val = static_cast<int>(c);
+      int char_val = static_cast<int>(tolower(c));
       // Moving from an odd count to an even one
       if (letters[char_val] > 0 && letters[char_val] & 1)
           number_of_odds--;
@@ -58,6 +58,17 @@ bool is_palindrome_textbook(string& s) {
   return true;
 }
 
+// Using bitset to test that there are either 1 or 0 letters with an odd count in the string
+// Assumes only letters a-z and A-Z are present in the string, along with spaces
+bool is_palindrome_bits(string& s) {
+  bitset<26> bits;
+  for (char& c : s) {
+    if (c != ' ')
+      bits.flip(static_cast<int>(tolower(c) - 'a'));
+  }
+  return bits.count() <= 1;
+}
+
 int main() {
   string s;
   cout << "Enter a string: ";
@@ -68,6 +79,11 @@ int main() {
     cout << "False\n";
   cout << "And textbook version says:\n";
   if (is_palindrome_textbook(s))
+    cout << "True\n";
+  else
+    cout << "False\n";
+  cout << "And bits version says:\n";
+  if (is_palindrome_bits(s))
     cout << "True\n";
   else
     cout << "False\n";
